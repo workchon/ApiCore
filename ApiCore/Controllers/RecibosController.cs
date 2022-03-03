@@ -22,7 +22,7 @@ namespace ApiCore.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<List<Recibos>>> Get(int id)
         {
-            var dbRecibo = await _dataContext.recibos.FindAsync(id);
+            var dbRecibo = await _dataContext.recibos.Where(x => x.UserId == id).ToListAsync();
             if (dbRecibo == null)
                 return BadRequest("Recibo no encontrado");
             return Ok(dbRecibo);
@@ -33,7 +33,7 @@ namespace ApiCore.Controllers
 
             _dataContext.recibos.Add(request);
             await _dataContext.SaveChangesAsync();
-            return Ok(await _dataContext.recibos.ToListAsync());
+            return Ok(await _dataContext.recibos.Where(x => x.UserId == request.UserId).ToListAsync());
         }
 
         [HttpPut]
@@ -51,7 +51,7 @@ namespace ApiCore.Controllers
 
             await _dataContext.SaveChangesAsync();
 
-            return Ok(await _dataContext.recibos.ToListAsync());
+            return Ok(await _dataContext.recibos.Where(x => x.UserId == request.UserId).ToListAsync());
         }
 
         [HttpDelete("{id}")]
@@ -64,7 +64,7 @@ namespace ApiCore.Controllers
 
             _dataContext.recibos.Remove(dbRecibo);
             await _dataContext.SaveChangesAsync();
-            return Ok(await _dataContext.recibos.ToListAsync());
+            return Ok(await _dataContext.recibos.Where(x => x.UserId == dbRecibo.UserId).ToListAsync());
         }
     }
 }
