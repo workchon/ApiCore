@@ -15,6 +15,15 @@ namespace ApiCore.Controllers
             _dataContext = dataContext;
         }
 
+        [HttpGet("{id}")]
+        public async Task<ActionResult<List<Users>>> Get(int id)
+        {
+            var user = await _dataContext.users.Where(x => x.Id == id).ToListAsync();
+            if (user == null)
+                return BadRequest("Recibo no encontrado");
+            return Ok(user);
+        }
+
         [HttpPut]
         public async Task<ActionResult<List<Users>>> LogIn(Users request)
         {
